@@ -6,15 +6,27 @@ public static class Arrays
     /// integer greater than 0.
     /// </summary>
     /// <returns>array of doubles that are the multiples of the supplied number</returns>
-    public static double[] MultiplesOf(double number, int length)
-    {
-        // TODO Problem 1 Start
-        // Remember: Using comments in your program, write down your process for solving this problem
-        // step by step before you write the code. The plan should be clear enough that it could
-        // be implemented by another person.
+   public static double[] MultiplesOf(double number, int length)
+{
+    // TODO Problem 1 Start
+    // Plan:
+    // 1. Create a new array of doubles with size 'length' to hold the result.
+    // 2. Loop from i = 0 to i = length - 1 (one iteration per multiple we need).
+    // 3. On each loop iteration, the multiple we want is 'number' times (i + 1),
+    //    since when i = 0 we want the 1st multiple (number * 1), when i = 1 we
+    //    want the 2nd multiple (number * 2), and so on.
+    // 4. Store that calculated value into the array at index i.
+    // 5. Once the loop is done, return the completed array.
 
-        return []; // replace this return statement with your own
+    double[] result = new double[length];
+
+    for (int i = 0; i < length; i++)
+    {
+        result[i] = number * (i + 1);
     }
+
+    return result;
+}
 
     /// <summary>
     /// Rotate the 'data' to the right by the 'amount'.  For example, if the data is 
@@ -26,8 +38,23 @@ public static class Arrays
     public static void RotateListRight(List<int> data, int amount)
     {
         // TODO Problem 2 Start
-        // Remember: Using comments in your program, write down your process for solving this problem
-        // step by step before you write the code. The plan should be clear enough that it could
-        // be implemented by another person.
+    // Plan:
+    // 1. Figure out the split point in the list: the last 'amount' elements are the
+    //    ones that need to move to the front. That split point is
+    //    splitIndex = data.Count - amount.
+    // 2. Use GetRange(splitIndex, amount) to copy out those last 'amount' elements
+    //    into a separate list called 'tail'.
+    // 3. RemoveRange(splitIndex, amount) to delete those elements from 'data',
+    //    leaving just the "head" part of the list behind.
+    // 4. InsertRange(0, tail) to place the 'tail' elements back into 'data'
+    //    at the very beginning, in front of the head.
+    // 5. Because List is passed by reference, modifying 'data' directly means we
+    //    don't need to return anything - the caller's list is already rotated.
+
+    int splitIndex = data.Count - amount;
+
+    List<int> tail = data.GetRange(splitIndex, amount);
+    data.RemoveRange(splitIndex, amount);
+    data.InsertRange(0, tail);
     }
 }
