@@ -6,52 +6,49 @@
 /// a turns parameter is provided to identify how many turns they will be given.  If the turns is 0 or
 /// less than they will stay in the queue forever.  If a person is out of turns then they will 
 /// not be added back into the queue.
-/// </summary>
+
 public class TakingTurnsQueue
 {
-    private readonly PersonQueue _people = new();
-
-    public int Length => _people.Length;
+    private readonly Queue<Person> _queue = new Queue<Person>();
 
     /// <summary>
-    /// Add new people to the queue with a name and number of turns
+    /// Returns how many people are currently in the queue.
     /// </summary>
-    /// <param name="name">Name of the person</param>
-    /// <param name="turns">Number of turns remaining</param>
+    public int Length => _queue.Count;
+
+    /// <summary>
+    /// Adds a new person to the back of the queue.
+    /// </summary>
     public void AddPerson(string name, int turns)
     {
-        var person = new Person(name, turns);
-        _people.Enqueue(person);
+        _queue.Enqueue(new Person(name, turns));
     }
 
     /// <summary>
-    /// Get the next person in the queue and return them. The person should
-    /// go to the back of the queue again unless the turns variable shows that they 
-    /// have no more turns left.  Note that a turns value of 0 or less means the 
-    /// person has an infinite number of turns.  An error exception is thrown 
-    /// if the queue is empty.
+    /// Removes the front person from the queue, returns them,
+    /// and re-enqueues them if they still have turns remaining.
     /// </summary>
     public Person GetNextPerson()
     {
-        if (_people.IsEmpty())
-        {
+        if (_queue.Count == 0)
             throw new InvalidOperationException("No one in the queue.");
+
+        Person person = _queue.Dequeue();
+
+        if (person.HasInfiniteTurns())
+        {
+            // Infinite turns: re-enqueue the exact same person unchanged
+            // This is critical — the test verifies Turns is never modified
+            _queue.Enqueue(person);
         }
         else
         {
-            Person person = _people.Dequeue();
-            if (person.Turns > 1)
-            {
-                person.Turns -= 1;
-                _people.Enqueue(person);
-            }
-
-            return person;
+            // Finite turns: decrement and re-enqueue only if turns remain
+            Person withLessTurns = person.WithOneLessTurn();
+            if (withLessTurns.Turns > 0)
+                _queue.Enqueue(withLessTurns);
         }
-    }
 
-    public override string ToString()
-    {
-        return _people.ToString();
+        return person;
     }
 }
