@@ -20,6 +20,12 @@ public class Maze
     private int _currX = 1;
     private int _currY = 1;
 
+     // Index constants for the bool[] directions array: [left, right, up, down]
+    private const int Left  = 0;
+    private const int Right = 1;
+    private const int Up    = 2;
+    private const int Down  = 3;
+
     public Maze(Dictionary<ValueTuple<int, int>, bool[]> mazeMap)
     {
         _mazeMap = mazeMap;
@@ -32,7 +38,9 @@ public class Maze
     /// </summary>
     public void MoveLeft()
     {
-        // FILL IN CODE
+        if (!_mazeMap[(_currX, _currY)][Left])
+            throw new InvalidOperationException("Can't go that way!");
+        _currX -= 1;
     }
 
     /// <summary>
@@ -41,7 +49,9 @@ public class Maze
     /// </summary>
     public void MoveRight()
     {
-        // FILL IN CODE
+        if (!_mazeMap[(_currX, _currY)][Right])
+            throw new InvalidOperationException("Can't go that way!");
+        _currX += 1;
     }
 
     /// <summary>
@@ -50,7 +60,9 @@ public class Maze
     /// </summary>
     public void MoveUp()
     {
-        // FILL IN CODE
+        if (!_mazeMap[(_currX, _currY)][Up])
+            throw new InvalidOperationException("Can't go that way!");
+        _currY -= 1;
     }
 
     /// <summary>
@@ -59,7 +71,9 @@ public class Maze
     /// </summary>
     public void MoveDown()
     {
-        // FILL IN CODE
+        if (!_mazeMap[(_currX, _currY)][Down])
+            throw new InvalidOperationException("Can't go that way!");
+        _currY += 1;
     }
 
     public string GetStatus()
